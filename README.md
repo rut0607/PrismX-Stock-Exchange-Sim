@@ -94,47 +94,7 @@ This is what PrismX does every time a participant places an order — from submi
 
 
 
-                    +------------------------------------------+
-                    |           Market Participants            |
-                    |     Traders · Algorithms · Investors     |
-                    +--------------------+---------------------+
-                                         |  REST API / WebSocket
-                                +--------v---------+
-                                |   API Gateway    |  :3000
-                                |  Express + Auth  |
-                                +--+------+-----+--+
-                                   |      |     |
-                    +--------------+      |     +--------------+
-                    v                     v                    v
-         +------------------+  +------------------+  +------------------+
-         |   Risk Service   |  | Matching Engine  |  |  Market Service  |
-         | Pre-trade checks |  | MaxHeap + MinHeap|  | Yahoo + Redis    |
-         | Collateral lock  |  | Price-time FIFO  |  | 5-15s TTL cache  |
-         +------------------+  +--------+---------+  +------------------+
-                                        |
-                              Trade Executed
-                                        |
-                    +-------------------+-------------------+
-                    v                                       v
-         +------------------+                   +------------------+
-         | Settlement Layer |                   |   Market Data    |
-         | Atomic DvP Tx    |                   |   Feed (WS)      |
-         | 4-way DB commit  |                   | Socket.io rooms  |
-         +--------+---------+                   +------------------+
-                  |
-         Trade Settled
-                  |
-         +--------v---------+
-         |  Ledger Service  |
-         | Double-entry     |
-         | Cash + Securities|
-         +--------+---------+
-                  |
-         +--------v---------+
-         | Decision Engine  |
-         | Behavioral AI    |
-         | Pattern detection|
-         +------------------+
+        
 ```
 
 
@@ -561,23 +521,6 @@ socket.on('trade', (trade) => console.log(trade));
 curl http://localhost:3000/api/v1/portfolio \
   -H "Authorization: Bearer {your_jwt}"
 ```
-
----
-
-## Development Roadmap
-
-| Phase | Focus | Status |
-|---|---|---|
-| Phase 1 | Backend foundation, folder structure, Supabase schema, Auth | ✅ Complete |
-| Phase 2 | Matching engine — MaxHeap, MinHeap, price-time priority, partial fills | ✅ Complete |
-| Phase 3 | Atomic settlement, execute_trade stored function, live trade test | ✅ Complete |
-| Phase 4 | Market data service, Redis caching, Socket.io real-time feed | 🔄 In Progress |
-| Phase 5 | Circuit breakers, double-entry ledger, order book depth API | Planned |
-| Phase 6 | Docker + docker-compose full deployment | Planned |
-| Phase 7 | Prometheus metrics, structured observability | Planned |
-| Phase 8 | Frontend — React dashboard, trading UI, real-time charts | Planned |
-| Phase 9 | Decision intelligence layer — behavioral analytics, replay mode | Planned |
-| Phase 10 | k6 load testing, benchmarking, final polish | Planned |
 
 ---
 
